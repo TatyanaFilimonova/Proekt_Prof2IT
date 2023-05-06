@@ -37,11 +37,21 @@ if __name__ == '__main__':
     #get_people_born_in_19th_century(name_basics, "people_born_in_19th_century.csv")
 
     # 3. Отримайте назви всіх фільмів, які тривають понад 2 години.
-    get_long_movies(title_basics, "get_long_movies.csv")
+    # get_long_movies(title_basics, "get_long_movies.csv")
+
+    # 4. Отримайте імена людей, відповідні фільмам / серіалам та персонажі, які вони грали у цих фільмах.
+    #get_actor_roles_by_title(name_basics, title_principals, title_akas, "get_actor_roles_by_title.csv")
+
+    unique_categories = title_principals.select("category").distinct()
+
+    # Collect the unique categories as a list
+    category_list = [row.category for row in unique_categories.collect()]
+
+    # Print the unique categories
+    for category in category_list:
+        print(category)
 
     """"
-    # 4. Отримайте імена людей, відповідні фільмам / серіалам та персонажі, які вони грали у цих фільмах.
-    get_actor_roles_by_title(name_df, "get_actor_roles_by_title.csv", spark)
 
     # 5. Отримайте інформацію про те, скільки дорослих фільмів / серіалів тощо є вкожному регіоні. Отримайте топ-100 з найбільшою кількістю з найбільшої кількості
     # в регіоні з найменшою.

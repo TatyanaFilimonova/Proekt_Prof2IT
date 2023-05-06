@@ -1,48 +1,44 @@
-# Тест 4
-import os
 import unittest
+
+from pyspark.sql import SparkSession
 
 from get_actor_roles_by_title import get_actor_roles_by_title
 
+class TestGetActoresRolesByTitle(unittest.TestCase):
 
-class TestGetActorRolesByTitle(unittest.TestCase):
+    def setUp(self):
+        self.spark = (SparkSession
+                      .builder
+                      .master("local[*]")
+                      .appName("Unit-tests")
+                      .getOrCreate())
 
-    def test_get_actor_roles_by_title(spark):
-        # Створюємо тимчасові файли для тестування
-        name_data = [("nm0000001", "Fred Astaire"), ("nm0000002", "Lauren Bacall"), ("nm0000003", "Brigitte Bardot"),
-                     ("nm0000004", "John Belushi")]
-        name_columns = ["nconst", "primaryName"]
-        name_df = spark.createDataFrame(name_data, name_columns)
 
-        title_principals_data = [("tt0000001", "nm0000001", "actor"), ("tt0000001", "nm0000002", "actress"),
-                                 ("tt0000002", "nm0000003", "actor"), ("tt0000002", "nm0000004", "actor")]
-        title_principals_columns = ["tconst", "nconst", "category"]
-        title_principals_file = "test_data/title.principals.tsv.gz"
-        title_principals_df = spark.createDataFrame(title_principals_data, title_principals_columns)
-        title_principals_df.write.csv(title_principals_file, mode='overwrite', header=True, sep='\t')
+    def tearDown(self):
+        self.spark.stop()
 
-        title_akas_data = [("tt0000001", "Great Movie", "en"), ("tt0000002", "Another Great Movie", "en"),
-                           ("tt0000002", "Encore un super film", "fr")]
-        title_akas_columns = ["titleId", "title", "language"]
-        title_akas_file = "test_data/title.akas.tsv.gz"
-        title_akas_df = spark.createDataFrame(title_akas_data, title_akas_columns)
-        title_akas_df.write.csv(title_akas_file, mode='overwrite', header=True, sep='\t')
 
-        # Запускаємо функцію
-        output_file = "test_output/actor_roles_by_title.csv"
-        get_actor_roles_by_title(name_df, title_principals_file, title_akas_file, output_file)
+    def test_get_actor_roles_by_title(self):
+        spark = SparkSession.builder.getOrCreate()
 
-        # Перевіряємо результати
-        assert os.path.exists(output_file)
-        with open(output_file, "r") as f:
-            lines = f.readlines()
-            assert len(lines) == 3  # треба врахувати заголовок
-            assert lines[1].startswith("Astaire")  # перевіряємо перший запис
+        # Create test DataFrames
+        name_data = [("1", "John Smith"), ("2", "Alice Johnson"), ("3", "Bob Williams")]
+        name_df = spark.createDataFrame(name_data, ["nconst", "primaryName"])
 
-        # Видаляємо тимчасові файли
-        os.remove(title_principals_file)
-        os.remove(title_akas_file)
-        os.remove(output_file)
+        title_principals_data = [("1", "actor", "1", "Dad"), ("2", "director", "2", ""), ("3", "actress", "3", "Son")]
+        title_principals = spark.createDataFrame(title_principals_data, ["nconst", "category", "tconst", "characters"])
 
-    # def tearDown(self):
-    # self.spark.stop()
+        title_akas_data = [("1", "Movie 1"), ("2", "Movie 2"), ("3", "Movie 3")]
+        title_akas = spark.createDataFrame(title_akas_data, ["tconst", "title"])
+
+        output_file = "/path/to/output.csv"
+
+        # Call the function
+        result = get_actor_roles_by_title(name_df, title_principals, title_akas, output_file)
+        result.show()
+
+        # Verify the output
+        assert result.count() == 2  # Check the number of rows in the result DataFrame
+
+        # Clean up the output file
+

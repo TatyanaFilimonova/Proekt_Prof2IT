@@ -1,14 +1,12 @@
 from pyspark.sql.functions import sum, col, desc, split, collect_list
+from spark import spark
 
 
 # 4. Отримайте імена людей, відповідні фільмам / серіалам та персонажі, які вони грали у цих фільмах.
 
-def get_actor_roles_by_title(name_df, output_file, spark):
-    # Завантажуємо датасети name.basics.tsv.gz, title.akas.tsv.gz та title.principals.tsv.gz
-    title_principals = spark.read.option("header", "true").option("delimiter", "\t").csv(
-        "data/title.principals.tsv.gz").filter("category='actor'")
-    title_akas = spark.read.option("header", "true").option("delimiter", "\t").csv(
-        "data/title.akas.tsv.gz").withColumnRenamed("titleId", "tconst")
+def get_actor_roles_by_title(name_df, title_principals, title_akas, output_file):
+    title_principals = title_principals.filter((title_principals.category == "actor") | (title_principals.category == "actress"))
+    title_akas = title_akas.withColumnRenamed("titleId", "tconst")
 
     # Об'єднуємо датасети name_basics та title_principals за допомогою ключа "nconst"
     name_principals = name_df.join(title_principals, "nconst")
