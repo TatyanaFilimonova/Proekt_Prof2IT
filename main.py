@@ -34,11 +34,12 @@ if __name__ == '__main__':
     # get_ukrainian_movies_and_tv_shows(title_akas, "ukrainian_movies_and_tv_shows.csv")
 
     # 2. Отримайте список імен людей, які народилися в 19 столітті.
-    get_people_born_in_19th_century(name_basics, "people_born_in_19th_century.csv")
-    """"
-    # 3. Отримайте назви всіх фільмів, які тривають понад 2 години.
-    get_long_movies(title_df, "get_long_movies.csv")
+    #get_people_born_in_19th_century(name_basics, "people_born_in_19th_century.csv")
 
+    # 3. Отримайте назви всіх фільмів, які тривають понад 2 години.
+    get_long_movies(title_basics, "get_long_movies.csv")
+
+    """"
     # 4. Отримайте імена людей, відповідні фільмам / серіалам та персонажі, які вони грали у цих фільмах.
     get_actor_roles_by_title(name_df, "get_actor_roles_by_title.csv", spark)
 
