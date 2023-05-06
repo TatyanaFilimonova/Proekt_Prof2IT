@@ -44,12 +44,13 @@ if __name__ == '__main__':
 
     # 5. Отримайте інформацію про те, скільки дорослих фільмів / серіалів тощо є вкожному регіоні. Отримайте топ-100 з найбільшою кількістю з найбільшої кількості
     # в регіоні з найменшою.
-    get_top_adult_movies_region(title_ratings, title_akas)
+    #get_top_adult_movies_region(title_akas, title_basics)
 
-    """"
 
     # 6. Отримайте інформацію про те, скільки епізодів у кожному телесеріалі. Отримайте топ-50, починаючи з телесеріалу з найбільшою кількістю епізодів.
-    get_top_tv_series(basics_df, episode_df)
+    get_top_tv_series(title_basics, title_episode)
+
+    """"
 
     #7. Отримайте 10 назв найпопулярніших фільмів / серіалів тощо за кожним десятиліттям.
     get_top_decade_ratings("data/title.ratings.tsv.gz", "data/title.basics.tsv.gz", "get_top_decade_ratings.csv")
