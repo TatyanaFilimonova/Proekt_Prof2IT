@@ -1,7 +1,6 @@
 import pyspark
 from pyspark.sql import Row
 from pyspark.sql import functions as f
-from pyspark.sql import SparkSession
 from pyspark.sql.functions import sum, col, desc, split, collect_list
 
 from get_actor_roles_by_title import get_actor_roles_by_title
@@ -11,42 +10,32 @@ from get_top_adult_movies_region import get_top_adult_movies_region
 from get_top_decade_ratings import get_top_decade_ratings
 from get_top_genre_ratings import get_top_genre_ratings
 from get_top_tv_series import get_top_tv_series
+from spark import spark
 from get_ukrainian_movies_and_tv_shows import get_ukrainian_movies_and_tv_shows
 
 if __name__ == '__main__':
 
-    spark = SparkSession.builder.appName("Read TSV file").getOrCreate()
-
     # зчитати файли
-    name_df = spark.read.format("csv").option("sep", "\t").option("header", "true").load("data/name.basics.tsv.gz")
-    name_df.show()
+    name_basics = spark.read.format("csv").option("sep", "\t").option("header", "true").load("data/name.basics.tsv.gz")
 
-    title_df = spark.read.format("csv").option("sep", "\t").option("header", "true").load("data/title.akas.tsv.gz")
-    title_df.show()
+    title_akas = spark.read.format("csv").option("sep", "\t").option("header", "true").load("data/title.akas.tsv.gz")
 
-    title_crew_df = spark.read.format("csv").option("sep", "\t").option("header", "true").load("data/title.crew.tsv.gz")
-    title_crew_df.show()
+    title_basics = spark.read.format("csv").option("sep", "\t").option("header", "true").load("data/title.basics.tsv.gz")
+
+    title_crew = spark.read.format("csv").option("sep", "\t").option("header", "true").load("data/title.crew.tsv.gz")
+
+    title_episode = spark.read.format("csv").option("sep", "\t").option("header", "true").load("data/title.episode.tsv.gz")
 
     title_principals = spark.read.option("header", "true").option("delimiter", "\t").csv("data/title.principals.tsv.gz")
-    title_principals.show()
 
-    episode_df = spark.read.format("csv").option("sep", "\t").option("header", "true").load("data/title.episode.tsv.gz")
-    episode_df.show()
-
-    basics_df = spark.read.format("csv").option("sep", "\t").option("header", "true").load("data/title.basics.tsv.gz")
-    basics_df.show()
-
-    raitings_df = spark.read.format("csv").option("sep", "\t").option("header", "true").load("data/title.ratings.tsv.gz")
-    basics_df.show()
-
-    df_6 = spark.read.format("csv").option("sep", "\t").option("header", "true").load("data/title.principals.tsv.gz")
+    title_ratings = spark.read.option("header", "true").option("delimiter", "\t").csv("data/title.ratings.tsv.gz")
 
     # 1. Отримайте всі назви серіалів / фільмів тощо, які доступні українською мовою.
-    get_ukrainian_movies_and_tv_shows(title_df, "ukrainian_movies_and_tv_shows.csv")
+    # get_ukrainian_movies_and_tv_shows(title_akas, "ukrainian_movies_and_tv_shows.csv")
 
     # 2. Отримайте список імен людей, які народилися в 19 столітті.
-    get_people_born_in_19th_century(name_df, "people_born_in_19th_century.csv")
-
+    get_people_born_in_19th_century(name_basics, "people_born_in_19th_century.csv")
+    """"
     # 3. Отримайте назви всіх фільмів, які тривають понад 2 години.
     get_long_movies(title_df, "get_long_movies.csv")
 
@@ -64,4 +53,4 @@ if __name__ == '__main__':
     get_top_decade_ratings("data/title.ratings.tsv.gz", "data/title.basics.tsv.gz", "get_top_decade_ratings.csv")
 
     # 8. Отримайте 10 назв найпопулярніших фільмів / серіалів тощо за кожним жанром.
-    get_top_genre_ratings("data/title.basics.tsv.gz", "data/title.ratings.tsv.gz", "get_top_genre_ratings.csv")
+    get_top_genre_ratings("data/title.basics.tsv.gz", "data/title.ratings.tsv.gz", "get_top_genre_ratings.csv") """

@@ -1,5 +1,6 @@
 # 2. Отримайте список імен людей, які народилися в 19 столітті.
 from pyspark.sql.functions import col
+from spark import spark
 
 
 def get_people_born_in_19th_century(name_df, output_file):

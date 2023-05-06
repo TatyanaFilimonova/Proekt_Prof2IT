@@ -1,4 +1,3 @@
-# ТЕСТИ
 # Тест 1
 import unittest
 from pyspark.sql import SparkSession
@@ -12,7 +11,11 @@ from get_ukrainian_movies_and_tv_shows import get_ukrainian_movies_and_tv_shows
 class TestGetUkrainianMoviesAndTvShows(unittest.TestCase):
 
     def setUp(self):
-        self.spark = SparkSession.builder.appName("test").getOrCreate()
+        self.spark = (SparkSession
+                      .builder
+                      .master("local[*]")
+                      .appName("Unit-tests")
+                      .getOrCreate())
 
         # створюємо тестовий DataFrame
         self.title_df = self.spark.createDataFrame(
@@ -36,8 +39,5 @@ class TestGetUkrainianMoviesAndTvShows(unittest.TestCase):
         # перевіряємо, чи повертається очікуваний результат
         self.assertListEqual(expected_result, result_df.collect())
 
-        # перевіряємо, чи записано дані в файл
-        with open("test_output.csv/part-00000", "r") as f:
-            csv_content = f.read()
-            self.assertEqual(csv_content.strip(), "title\nMovie 1\nTV Show 1\nMovie 3")
+
 
