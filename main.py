@@ -42,20 +42,11 @@ if __name__ == '__main__':
     # 4. Отримайте імена людей, відповідні фільмам / серіалам та персонажі, які вони грали у цих фільмах.
     #get_actor_roles_by_title(name_basics, title_principals, title_akas, "get_actor_roles_by_title.csv")
 
-    unique_categories = title_principals.select("category").distinct()
-
-    # Collect the unique categories as a list
-    category_list = [row.category for row in unique_categories.collect()]
-
-    # Print the unique categories
-    for category in category_list:
-        print(category)
-
-    """"
-
     # 5. Отримайте інформацію про те, скільки дорослих фільмів / серіалів тощо є вкожному регіоні. Отримайте топ-100 з найбільшою кількістю з найбільшої кількості
     # в регіоні з найменшою.
-    get_top_adult_movies_region("data/title.ratings.tsv.gz", "data/title.akas.tsv.gz", spark)
+    get_top_adult_movies_region(title_ratings, title_akas)
+
+    """"
 
     # 6. Отримайте інформацію про те, скільки епізодів у кожному телесеріалі. Отримайте топ-50, починаючи з телесеріалу з найбільшою кількістю епізодів.
     get_top_tv_series(basics_df, episode_df)
