@@ -1,12 +1,10 @@
 # 7. Отримайте 10 назв найпопулярніших фільмів / серіалів тощо за кожним десятиліттям.
-from pyspark.sql.functions import regexp_extract, floor, col, row_number
+from pyspark.sql.functions import regexp_extract, floor, col, row_number, desc
 from pyspark.sql.window import Window
+from spark import spark
 
 
-def get_top_decade_ratings(ratings_path, basics_path, output_path, spark):
-    # завантаження датасетів
-    ratings_df = spark.read.option("delimiter", "\t").csv(ratings_path, header=True, inferSchema=True)
-    basics_df = spark.read.option("delimiter", "\t").csv(basics_path, header=True, inferSchema=True)
+def get_top_decade_ratings(ratings_df, basics_df, output_path):
 
     # вибір потрібних стовпців
     ratings_df = ratings_df.select("tconst", "averageRating")
@@ -30,10 +28,10 @@ def get_top_decade_ratings(ratings_path, basics_path, output_path, spark):
               .orderBy("decade", "rank"))
 
     # збереження результату у CSV-файл
-    top_10.write.option("header", "true").option("delimiter", "\t").csv(output_path)
+    top_10.write.option("header", "true").option("delimiter", "\t").csv(output_path, mode='overwrite')
 
     # виведення результату
-    top_10.show()
+    top_10.orderBy(desc("decade")).show()
 
     # повернення результату
     return top_10

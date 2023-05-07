@@ -14,6 +14,9 @@ class TestTVSeries(unittest.TestCase):
                       .appName("Unit-tests")
                       .getOrCreate())
 
+    def tearDown(self):
+        self.spark.stop()
+
     def test_get_top_tv_series(self):
         # create some test data
         basics_data = [("tt0001", "tvSeries", "The Show 1"),

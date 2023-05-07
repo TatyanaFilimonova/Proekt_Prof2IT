@@ -48,12 +48,12 @@ if __name__ == '__main__':
 
 
     # 6. Отримайте інформацію про те, скільки епізодів у кожному телесеріалі. Отримайте топ-50, починаючи з телесеріалу з найбільшою кількістю епізодів.
-    get_top_tv_series(title_basics, title_episode)
+    # get_top_tv_series(title_basics, title_episode)
 
-    """"
 
     #7. Отримайте 10 назв найпопулярніших фільмів / серіалів тощо за кожним десятиліттям.
-    get_top_decade_ratings("data/title.ratings.tsv.gz", "data/title.basics.tsv.gz", "get_top_decade_ratings.csv")
+    get_top_decade_ratings(title_ratings, title_basics, "get_top_decade_ratings.csv")
+    """"
 
     # 8. Отримайте 10 назв найпопулярніших фільмів / серіалів тощо за кожним жанром.
     get_top_genre_ratings("data/title.basics.tsv.gz", "data/title.ratings.tsv.gz", "get_top_genre_ratings.csv") """
