@@ -2,12 +2,10 @@
 
 from pyspark.sql.functions import col, desc, dense_rank, avg, explode, split
 from pyspark.sql.window import Window
+from spark import spark
 
 
-def get_top_genre_ratings(title_basics_path, title_ratings_path, output_path, spark):
-    # Зчитуємо необхідні датасети
-    title_basics = spark.read.option("header", "true").option("delimiter", "\t").csv(title_basics_path)
-    title_ratings = spark.read.option("header", "true").option("delimiter", "\t").csv(title_ratings_path)
+def get_top_genre_ratings(title_basics, title_ratings, output_path):
 
     # Об'єднуємо датасети title_basics та title_ratings за допомогою ключа "tconst"
     title_genre_ratings = title_basics.join(title_ratings, "tconst")
@@ -31,7 +29,7 @@ def get_top_genre_ratings(title_basics_path, title_ratings_path, output_path, sp
     top_genre_ratings.show()
 
     # Зберігаємо результати в CSV-файл
-    top_genre_ratings.write.option("header", "true").option("delimiter", "\t").csv(output_path)
+    top_genre_ratings.write.option("header", "true").option("delimiter", "\t").csv(output_path, mode="overwrite")
 
     # виведемо результат
     top_genre_ratings.show()

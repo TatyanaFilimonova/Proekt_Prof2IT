@@ -31,29 +31,26 @@ if __name__ == '__main__':
     title_ratings = spark.read.option("header", "true").option("delimiter", "\t").csv("data/title.ratings.tsv.gz")
 
     # 1. Отримайте всі назви серіалів / фільмів тощо, які доступні українською мовою.
-    # get_ukrainian_movies_and_tv_shows(title_akas, "ukrainian_movies_and_tv_shows.csv")
+    get_ukrainian_movies_and_tv_shows(title_akas, "ukrainian_movies_and_tv_shows.csv")
 
     # 2. Отримайте список імен людей, які народилися в 19 столітті.
-    #get_people_born_in_19th_century(name_basics, "people_born_in_19th_century.csv")
+    get_people_born_in_19th_century(name_basics, "people_born_in_19th_century.csv")
 
     # 3. Отримайте назви всіх фільмів, які тривають понад 2 години.
-    # get_long_movies(title_basics, "get_long_movies.csv")
+    get_long_movies(title_basics, "get_long_movies.csv")
 
     # 4. Отримайте імена людей, відповідні фільмам / серіалам та персонажі, які вони грали у цих фільмах.
-    #get_actor_roles_by_title(name_basics, title_principals, title_akas, "get_actor_roles_by_title.csv")
+    get_actor_roles_by_title(name_basics, title_principals, title_akas, "get_actor_roles_by_title.csv")
 
     # 5. Отримайте інформацію про те, скільки дорослих фільмів / серіалів тощо є вкожному регіоні. Отримайте топ-100 з найбільшою кількістю з найбільшої кількості
     # в регіоні з найменшою.
-    #get_top_adult_movies_region(title_akas, title_basics)
-
+    get_top_adult_movies_region(title_akas, title_basics)
 
     # 6. Отримайте інформацію про те, скільки епізодів у кожному телесеріалі. Отримайте топ-50, починаючи з телесеріалу з найбільшою кількістю епізодів.
-    # get_top_tv_series(title_basics, title_episode)
-
+    get_top_tv_series(title_basics, title_episode)
 
     #7. Отримайте 10 назв найпопулярніших фільмів / серіалів тощо за кожним десятиліттям.
     get_top_decade_ratings(title_ratings, title_basics, "get_top_decade_ratings.csv")
-    """"
 
     # 8. Отримайте 10 назв найпопулярніших фільмів / серіалів тощо за кожним жанром.
-    get_top_genre_ratings("data/title.basics.tsv.gz", "data/title.ratings.tsv.gz", "get_top_genre_ratings.csv") """
+    get_top_genre_ratings(title_basics, title_ratings, "get_top_genre_ratings.csv")
