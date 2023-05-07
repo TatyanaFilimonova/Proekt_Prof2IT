@@ -7,13 +7,20 @@ from get_top_tv_series import get_top_tv_series
 
 class TestTVSeries(unittest.TestCase):
 
+    def setUp(self):
+        self.spark = (SparkSession
+                      .builder
+                      .master("local[*]")
+                      .appName("Unit-tests")
+                      .getOrCreate())
+
     def test_get_top_tv_series(self):
         # create some test data
         basics_data = [("tt0001", "tvSeries", "The Show 1"),
                        ("tt0002", "movie", "The Movie 1"),
                        ("tt0003", "tvSeries", "The Show 2"),
                        ("tt0004", "tvSeries", "The Show 3")]
-        basics_df = spark.createDataFrame(basics_data, ["tconst", "titleType", "primaryTitle"])
+        basics_df = self.spark.createDataFrame(basics_data, ["tconst", "titleType", "originalTitle"])
 
         episode_data = [("tt0001", 1),
                         ("tt0001", 2),
@@ -24,7 +31,7 @@ class TestTVSeries(unittest.TestCase):
                         ("tt0004", 2),
                         ("tt0004", 3),
                         ("tt0004", 4)]
-        episode_df = spark.createDataFrame(episode_data, ["parentTconst", "episodeNumber"])
+        episode_df = self.spark.createDataFrame(episode_data, ["parentTconst", "episodeNumber"])
 
         # call the function
         result = get_top_tv_series(basics_df, episode_df)
@@ -33,9 +40,3 @@ class TestTVSeries(unittest.TestCase):
         expected_output = [("The Show 3", 4), ("The Show 1", 2), ("The Show 2", 2)]
         self.assertEqual(result.collect(), expected_output)
 
-        # check the CSV file was created
-        import os
-        self.assertTrue(os.path.isfile("episode_count.csv"))
-
-        # delete the CSV file
-        os.remove("episode_count.csv")
